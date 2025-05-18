@@ -26,4 +26,16 @@ public class PostService {
 
         return new PostResponseDto(post.getId(), post.getTitle(), post.getContent());
     }
+
+    public PostResponseDto[] findAll() {
+        return postRepository.findAll().stream()
+                .map(post -> new PostResponseDto(post.getId(), post.getTitle(), post.getContent()))
+                .toArray(PostResponseDto[]::new);
+    }
+
+    public PostResponseDto findById(Long id) {
+        return postRepository.findById(id)
+                .map(post -> new PostResponseDto(post.getId(), post.getTitle(), post.getContent()))
+                .orElseThrow(() -> new IllegalArgumentException("Not found id = " + id));
+    }
 }

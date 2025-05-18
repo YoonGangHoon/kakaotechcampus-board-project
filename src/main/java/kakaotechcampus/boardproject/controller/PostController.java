@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -17,6 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping
+    public ResponseEntity<PostResponseDto[]> findAll() {
+        return new ResponseEntity<>(postService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PostResponseDto> findById(@PathVariable Long id) {
+        return new ResponseEntity<>(postService.findById(id), HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<PostResponseDto> save(@RequestBody CreatePostRequestDto requestDto) {
