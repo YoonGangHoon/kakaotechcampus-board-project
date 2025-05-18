@@ -3,15 +3,13 @@ package kakaotechcampus.boardproject.controller;
 import kakaotechcampus.boardproject.dto.MemberResponseDto;
 import kakaotechcampus.boardproject.dto.SignUpRequestDto;
 import kakaotechcampus.boardproject.dto.SignUpResponseDto;
+import kakaotechcampus.boardproject.dto.UpdatePasswordRequestDto;
 import kakaotechcampus.boardproject.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,5 +28,11 @@ public class MemberController {
         SignUpResponseDto signUpResponseDto = memberService.signUp(requestDto);
 
         return new ResponseEntity<>(signUpResponseDto, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UpdatePasswordRequestDto requestDto) {
+        memberService.updatePassword(id, requestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

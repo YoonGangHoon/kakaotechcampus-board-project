@@ -1,8 +1,10 @@
 package kakaotechcampus.boardproject.service;
 
+import jakarta.transaction.Transactional;
 import kakaotechcampus.boardproject.dto.MemberResponseDto;
 import kakaotechcampus.boardproject.dto.SignUpRequestDto;
 import kakaotechcampus.boardproject.dto.SignUpResponseDto;
+import kakaotechcampus.boardproject.dto.UpdatePasswordRequestDto;
 import kakaotechcampus.boardproject.entity.Member;
 import kakaotechcampus.boardproject.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.beans.Transient;
 import java.util.Optional;
 
 @Service
@@ -42,5 +45,16 @@ public class MemberService {
         }
 
         return new MemberResponseDto(member.get().getUsername(), member.get().getAge());
+    }
+
+    @Transactional
+    public void updatePassword(Long id, UpdatePasswordRequestDto requestDto) {
+        Member findMember = memberRepository.findByIdOrElseThrow(id);
+
+        if (!findMember.getPassword().equals(requestDto.getOldPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다.");
+        }
+
+        findMember.updatePassword(requestDto.getNewPassword());
     }
 }
