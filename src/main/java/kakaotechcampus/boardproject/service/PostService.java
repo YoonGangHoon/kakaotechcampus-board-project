@@ -9,6 +9,8 @@ import kakaotechcampus.boardproject.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class PostService {
@@ -34,8 +36,12 @@ public class PostService {
     }
 
     public PostResponseDto findById(Long id) {
-        return postRepository.findById(id)
-                .map(post -> new PostResponseDto(post.getId(), post.getTitle(), post.getContent()))
-                .orElseThrow(() -> new IllegalArgumentException("Not found id = " + id));
+        Post post = postRepository.findByIdOrElseThrow(id);
+        return new PostResponseDto(post.getId(), post.getTitle(), post.getContent());
+    }
+
+    public void delete(Long id) {
+        Post post = postRepository.findByIdOrElseThrow(id);
+        postRepository.delete(post);
     }
 }
